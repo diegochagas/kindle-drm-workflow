@@ -1,0 +1,6 @@
+# Account-derived key material and generated archives must never enter Git.
+oldbooks.k4i
+archived_kfx/
+tools/
+output/
+backup/
