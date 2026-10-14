@@ -34,15 +34,17 @@ In particular, do not use the article's `omarchy-windows-vm` commands, its
 - Your purchased Kindle books available to the Amazon account you will use in
   the Windows guest.
 
-Create a private host workspace (the companion setup project does this too):
+This setup uses an existing WinBoat share at
+`/mnt/data/winboat/shared/DeDRM_tools`; `oldbooks.k4i` is generated directly
+inside it. Configure that path in `linux-mint-setup/config.sh`:
 
 ```bash
-mkdir -p "$HOME/Kindle-DeDRM"/{tools,output,backup}
-chmod 700 "$HOME/Kindle-DeDRM"
+KINDLE_DEDRM_DIR="/mnt/data/winboat/shared/DeDRM_tools"
+KINDLE_DEDRM_BACKUP_DIR="/mnt/data/nextcloud/Documents/Credentials/Kindle-DeDRM"
 ```
 
-Share that folder, or a dedicated subfolder of an existing WinBoat share. The
-Windows path is installation-specific—do not guess it.
+The shared-folder mapping is already in place. Avoid editing WinBoat's VM-data
+directory or substituting Omarchy's paths for this share.
 
 ## Workflow
 
@@ -62,12 +64,14 @@ Windows path is installation-specific—do not guess it.
    `MSIXKFXArchiverMobi1_XXXXX.exe` whose suffix matches that app version.
    Copy it to the Windows-visible `tools` directory and run it from PowerShell.
    The release notes—not an old tutorial—are the source of truth.
-5. The archiver should produce `archived_kfx/` and `oldbooks.k4i`. Copy them to
-   the host workspace, restrict the key file, and never commit, publish, or
-   screenshot it:
+5. The archiver should produce `archived_kfx/` and `oldbooks.k4i`. In this
+   setup they are available in `/mnt/data/winboat/shared/DeDRM_tools`. The
+   companion setup backs up `oldbooks.k4i`, `books.keyfile`, and
+   `storage/.kinf2024` to `/mnt/data/nextcloud/Documents/Credentials/Kindle-DeDRM`.
+   Never commit, publish, or screenshot them:
 
    ```bash
-   chmod 600 "$HOME/Kindle-DeDRM/output/oldbooks.k4i"
+   chmod 600 /mnt/data/winboat/shared/DeDRM_tools/oldbooks.k4i
    ```
 
    If the archiver reports a missing `MSVCP140.dll`, install the official
@@ -101,7 +105,9 @@ Windows path is installation-specific—do not guess it.
 ## Security checklist
 
 - Keep `oldbooks.k4i` mode `0600` and out of cloud-synced/public folders.
-- Never commit a raw keyfile, even to a private repository.
+- Keep `books.keyfile` and `.kinf2024` private too when the current toolchain
+  creates them.
+- Never commit raw key material, even to a private repository.
 - Treat shared-folder contents as sensitive while the Windows guest is running.
 - Back up the key only in encrypted form, with the decryption key stored
   separately.

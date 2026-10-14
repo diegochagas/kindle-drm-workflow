@@ -1,5 +1,7 @@
 # Account-derived key material and generated archives must never enter Git.
 oldbooks.k4i
+books.keyfile
+.kinf2024
 archived_kfx/
 tools/
 output/
